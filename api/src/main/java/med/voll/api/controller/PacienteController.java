@@ -36,22 +36,31 @@ public class PacienteController {
     }
 
     @GetMapping
-    public Page<DadosListagemPaciente> listar(@PageableDefault(size = 10, sort = { "nome" }) Pageable paginacao){
-        return repository.findAllByAtivoTrue(paginacao).map(DadosListagemPaciente::new);
+    public ResponseEntity<Page<DadosListagemPaciente>> listar(@PageableDefault(size = 10, sort = { "nome" }) Pageable paginacao){
+        var page = repository.findAllByAtivoTrue(paginacao).map(DadosListagemPaciente::new);
+        return ResponseEntity.ok(page);
     }
 
     @PutMapping
     @Transactional
-    public void atualizar(@RequestBody @Valid DadosAtualizacaoPaciente dados){
+    public ResponseEntity atualizar(@RequestBody @Valid DadosAtualizacaoPaciente dados){
         var paciente = repository.getReferenceById(dados.id());
         paciente.atualizarInformacoes(dados);
+        return ResponseEntity.ok(new DadosDetalhamentoPaciente(paciente));
     }
 
     @DeleteMapping("/{id}")
     @Transactional
-    public void excluir(@PathVariable Long id){
+    public ResponseEntity excluir(@PathVariable Long id){
         var paciente = repository.getReferenceById(id);
         paciente.excluir();
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity detalhar(@PathVariable Long id){
+        var paciente = repository.getReferenceById(id);
+        return ResponseEntity.ok(new DadosDetalhamentoPaciente(paciente));
     }
 
 
