@@ -1,7 +1,7 @@
-package med.voll.api.medico.DTO;
+package med.voll.api.domain.medico.DTO;
 
-import med.voll.api.medico.entity.Especialidade;
-import med.voll.api.medico.entity.Medico;
+import med.voll.api.domain.medico.entity.Medico;
+import med.voll.api.domain.medico.entity.Especialidade;
 
 public record DadosListagemMedico(
         Long id,
